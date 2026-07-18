@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Mute Chat",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Temporarily pause audio notifications for chat"
+            }
+          }
+        ],
+        "send": {
+          "callback": "monitor:mute"
+        }
+      }
+    ]
+  }
+]
