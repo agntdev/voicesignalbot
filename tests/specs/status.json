@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/status",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Show current monitoring status and recent activity log"
+            }
+          }
+        ],
+        "send": {
+          "text": "/status"
+        }
+      }
+    ]
+  }
+]
