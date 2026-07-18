@@ -1,19 +1,77 @@
 [
   {
-    "name": "/set_voice",
+    "name": "/set_voice shows current settings",
     "steps": [
       {
+        "send": { "text": "/set_voice" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Configure TTS voice profile (gender/speed)"
+              "text": "Configure TTS voice profile (gender/speed)\n\nGender: neutral\nSpeed: normal"
             }
           }
-        ],
-        "send": {
-          "text": "/set_voice"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Voice settings callback shows current settings",
+    "steps": [
+      {
+        "send": { "callback": "voice:settings" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Configure TTS voice profile (gender/speed)\n\nGender: neutral\nSpeed: normal"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Change voice gender shows options",
+    "steps": [
+      {
+        "send": { "callback": "voice:settings" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "voice:gender" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Pick a voice gender:"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Change voice speed shows options",
+    "steps": [
+      {
+        "send": { "callback": "voice:settings" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "voice:speed" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Pick a speech speed:"
+            }
+          }
+        ]
       }
     ]
   }

@@ -1,19 +1,55 @@
 [
   {
-    "name": "/monitor",
+    "name": "/monitor with no chats shows empty state",
     "steps": [
       {
+        "send": { "text": "/monitor" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Manage monitored chat list (add/remove/enable/disable)"
+              "text": "Manage monitored chat list (add/remove/enable/disable)\n\nNo chats monitored yet. Tap ➕ Add to start."
             }
           }
-        ],
-        "send": {
-          "text": "/monitor"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Monitor list callback shows empty state",
+    "steps": [
+      {
+        "send": { "callback": "monitor:list" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Manage monitored chat list (add/remove/enable/disable)\n\nNo chats monitored yet. Tap ➕ Add to start."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Monitor add button prompts for chat ID",
+    "steps": [
+      {
+        "send": { "callback": "monitor:list" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "monitor:add" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Send the chat ID or invite link for the channel or group you want to monitor."
+            }
+          }
+        ]
       }
     ]
   }
