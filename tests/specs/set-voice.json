@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/set_voice",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Configure TTS voice profile (gender/speed)"
+            }
+          }
+        ],
+        "send": {
+          "text": "/set_voice"
+        }
+      }
+    ]
+  }
+]
