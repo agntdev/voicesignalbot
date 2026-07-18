@@ -1,19 +1,33 @@
 [
   {
-    "name": "/status",
+    "name": "/status shows monitoring status",
     "steps": [
       {
+        "send": { "text": "/status" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Show current monitoring status and recent activity log"
+              "text": "Show current monitoring status and recent activity log\n\nNo chats monitored yet.\n\nVoice: neutral, normal"
             }
           }
-        ],
-        "send": {
-          "text": "/status"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Status callback shows monitoring status",
+    "steps": [
+      {
+        "send": { "callback": "status:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Show current monitoring status and recent activity log\n\nNo chats monitored yet.\n\nVoice: neutral, normal"
+            }
+          }
+        ]
       }
     ]
   }

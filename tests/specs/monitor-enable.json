@@ -1,19 +1,17 @@
 [
   {
-    "name": "Enable Chat",
+    "name": "Enable Chat with no chats shows empty state",
     "steps": [
       {
+        "send": { "callback": "monitor:enable" },
         "expect": [
           {
-            "method": "sendMessage",
+            "method": "editMessageText",
             "payload": {
-              "text": "Toggle monitoring for selected chat"
+              "text": "Toggle monitoring for selected chat\n\nNo chats to enable. Add a chat first via 📡 Monitor."
             }
           }
-        ],
-        "send": {
-          "callback": "monitor:enable"
-        }
+        ]
       }
     ]
   }

@@ -1,19 +1,17 @@
 [
   {
-    "name": "Mute Chat",
+    "name": "Mute Chat with no chats shows empty state",
     "steps": [
       {
+        "send": { "callback": "monitor:mute" },
         "expect": [
           {
-            "method": "sendMessage",
+            "method": "editMessageText",
             "payload": {
-              "text": "Temporarily pause audio notifications for chat"
+              "text": "Temporarily pause audio notifications for chat\n\nNo chats to mute. Add a chat first via 📡 Monitor."
             }
           }
-        ],
-        "send": {
-          "callback": "monitor:mute"
-        }
+        ]
       }
     ]
   }

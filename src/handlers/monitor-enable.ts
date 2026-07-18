@@ -1,17 +1,49 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { registerMainMenuItem, inlineButton, inlineKeyboard } from "../toolkit/index.js";
+import { store } from "../store.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
-// Menu: wire this into /start via registerMainMenuItem({ label: "Enable Chat", data: "monitor:enable" }) if the toolkit exposes it.
+registerMainMenuItem({ label: "🟢 Enable", data: "monitor:enable", order: 15 });
 
-const composer = new Composer();
+const composer = new Composer<Ctx>();
 
 composer.callbackQuery("monitor:enable", async (ctx) => {
   await ctx.answerCallbackQuery();
-  await ctx.reply("Toggle monitoring for selected chat");
+  const chats = await store.getMonitoredChats();
+  if (chats.length === 0) {
+    await ctx.editMessageText(
+      "Toggle monitoring for selected chat\n\nNo chats to enable. Add a chat first via 📡 Monitor.",
+      { reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]) },
+    );
+    return;
+  }
+  const rows = chats.map((c) => {
+    const label = c.enabled ? `${c.label} (on)` : `${c.label} (off)`;
+    return [inlineButton(label, `monitor:toggle:${c.id}`)];
+  });
+  rows.push([inlineButton("⬅️ Back to menu", "menu:main")]);
+  await ctx.editMessageText("Toggle monitoring for selected chat", {
+    reply_markup: inlineKeyboard(rows),
+  });
+});
+
+composer.callbackQuery(/^monitor:toggle:(.+)$/, async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const chatId = ctx.match[1];
+  const chat = await store.getMonitoredChat(chatId);
+  if (!chat) {
+    await ctx.reply("Chat not found.", {
+      reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+    });
+    return;
+  }
+  chat.enabled = !chat.enabled;
+  await store.updateMonitoredChat(chat);
+  const state = chat.enabled ? "enabled" : "disabled";
+  await store.logActivity(`${chat.label} ${state}`);
+  await ctx.editMessageText(`Monitoring ${state} for "${chat.label}".`, {
+    reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+  });
 });
 
 export default composer;
